@@ -1,0 +1,72 @@
+1. What is the Node.js Event Loop?
+
+The event loop is what allows Node.js to perform non-blocking I/O operations — despite the fact that a single 
+JavaScript thread is used by default — by offloading operations to the system kernel whenever possible.
+Since most modern kernels are multi-threaded, they can handle multiple operations executing in the background.
+ When one of these operations completes, the kernel tells Node.js so that the appropriate callback may be added 
+ to the poll queue to eventually be executed. We'll explain this in further detail later in this topic.
+
+
+ 2. What is Libuv and What Role Does It Play in Node.js?
+
+libuv is a C library originally written for Node.js to abstract non-blocking I/O operations.
+How It Works:-
+_ When a blocking operation (e.g., reading a file) is triggered, LibUV offloads it to the thread pool.
+_ A worker thread picks up the task and executes it.
+_ Once completed, the result is passed back to the event loop, which then invokes the corresponding callback
+ in JavaScript.
+
+ 3. How Does Node.js Handle Asynchronous Operations Under the Hood?
+
+ Strategies for Handling Asynchronous Operations:-
+_ Callbacks: Callbacks are the traditional way of handling asynchronous operations in NodeJS. A callback 
+function is passed as an argument to an asynchronous function and is executed once the operation completes.
+ While effective, nesting callbacks can lead to callback hell, making the code difficult to read and maintain.
+
+_ Promises: Promises provide a cleaner alternative to callbacks for managing asynchronous operations. A promise
+ represents the eventual completion or failure of an asynchronous task and allows the chaining of then() and 
+ catch() methods to handle success and error conditions respectively. Promises help mitigate callback hell and 
+ improve code readability.
+
+_ Async/Await: Introduced in ES2017, async/await syntax offers a more concise and synchronous-like way of
+ handling asynchronous operations in Node. Async functions return promises implicitly, allowing developers to
+  write asynchronous code in a synchronous style. Async/await simplifies error handling and enhances code 
+  readability compared to traditional callback-based approaches.
+
+
+4. What is the Difference Between the Call Stack, Event Queue, and Event Loop in Node.js?
+
+_ Call Stack:
+A Call Stack is a simple data structure provided by the V8 engine that keeps track of all currently executing 
+functions. Steps of Call Stack works are first Functions are added to the stack when called, then Once a function
+finishes execution, it is removed finally JavaScript executes one function at a time on the Call Stack.
+
+_ The Event Queue:
+ Event Queue is a queue that holds callbacks for asynchronous operations.
+ Callbacks wait in the queue until the Call Stack is empty.They are not executed immediately.
+
+ _ The Event Loop:
+  The Event Loop is a continuous loop that monitors the Call Stack and Event Queue.If the Call Stack is empty,
+   it pulls the first callback from the Event Queue and pushes it onto the Call Stack.Ensures asynchronous 
+   callbacks execute in a non-blocking, timely manner.
+
+   5. What is the Node.js Thread Pool and How to Set the Thread Pool Size?
+
+   The thread pool in libuv is a pool of worker threads (default size: 4) that offloads expensive or blocking
+    operations. It allows Node.js to perform CPU-bound or blocking tasks asynchronously without freezing 
+     main thread.
+
+     You can configure the number of threads in Node.js using the environment variable:
+     (UV_THREADPOOL_SIZE=8 node app.js)
+
+     6. How Does Node.js Handle Blocking and Non-Blocking Code Execution?
+
+     Blocking in NodeJS:-
+When your code runs a task, it stops and waits for that task to completely finish before moving on to the next 
+thing. It's like reading a book one word at a time, never skipping ahead.The program waits patiently for the 
+current operation to finish.No other code can run until that operation is done.
+
+    Non-Blocking in NodeJS:-
+Non-blocking means your program can keep doing other things while a task is running in the background. It 
+doesn't have to stop and wait for that task to finish before moving on.The program doesn't wait for the current
+task to complete.Other code can run while the task is working in the background
