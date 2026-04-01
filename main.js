@@ -3,7 +3,7 @@
 // • Output Example: log each chunk
 
 const fs=require("fs")
-const { encode } = require("punycode")
+
 
 const readstream=fs.createReadStream("./big.txt",{
     encoding: "utf-8",
